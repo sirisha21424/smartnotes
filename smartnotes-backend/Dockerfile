@@ -18,6 +18,4 @@ COPY --from=build /app/target/*.jar app.jar
 
 # Expose port 8080 and run the application
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]git add .
-git commit -m "Deployment: Fix Dockerfile to use a multi-stage Maven build"
-git push origin master:main
+ENTRYPOINT ["java", "-jar", "app.jar"]
