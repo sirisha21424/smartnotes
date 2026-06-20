@@ -1,11 +1,23 @@
-# Step 1: Use an official OpenJDK runtime as a parent image
-FROM eclipse-temurin:17-jdk-alpine
-
-# Step 2: Set the working directory inside the container
+# --- Stage 1: Build the Spring Boot Application ---
+FROM maven:3.8.5-openjdk-17 AS build
 WORKDIR /app
 
-# Step 3: Copy the build artifact from the target folder into the container
-COPY target/*.jar app.jar
+# Copy the pom.xml and source code
+COPY pom.xml .
+COPY src ./src
 
-# Step 4: Run the spring boot application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Compile and package the application into a JAR file
+RUN mvn clean package -DskipTests
+
+# --- Stage 2: Run the Application ---
+FROM eclipse-temurin:17-jdk-alpine
+WORKDIR /app
+
+# Copy the compiled JAR from the build stage
+COPY --from=build /app/target/*.jar app.jar
+
+# Expose port 8080 and run the application
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]git add .
+git commit -m "Deployment: Fix Dockerfile to use a multi-stage Maven build"
+git push origin master:main
