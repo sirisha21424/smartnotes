@@ -29,25 +29,35 @@ export default function App() {
   };
 
   return (
-    <div className="container">
-      <h1>Smart Flashcards</h1>
+  <div className="container">
+    <h1 className="title">🚀 SmartNotes AI</h1>
 
-      <textarea
-        placeholder="Paste your notes here..."
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
+    <p className="subtitle">
+      Generate AI-powered flashcards from notes or any topic
+    </p>
 
-      <button onClick={generateFlashcards} disabled={loading}>
-        {loading ? "Generating..." : "Generate Flashcards"}
-      </button>
+    <textarea
+      placeholder="Enter notes or a topic (Java, DBMS, Binary Search...)"
+      value={text}
+      onChange={(e) => setText(e.target.value)}
+    />
 
-      <div className="grid">
-        {cards.map((card, index) => (
-          <Flashcard key={index} card={card} />
-        ))}
+    <button onClick={generateFlashcards} disabled={loading}>
+      {loading ? "Generating..." : "Generate Flashcards"}
+    </button>
+
+    {loading && (
+      <div className="loading">
+        🤖 Generating flashcards...
       </div>
+    )}
+
+    <div className="grid">
+      {cards.map((card, index) => (
+        <Flashcard key={index} card={card} />
+      ))}
     </div>
-  );
+  </div>
+);
 }
 

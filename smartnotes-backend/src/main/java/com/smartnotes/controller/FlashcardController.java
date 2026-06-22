@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/flashcards")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "https://smartnotes-tau-seven.vercel.app")
+// Replace your existing @CrossOrigin line with this:
+@CrossOrigin(origins = {"http://localhost:5173", "https://smartnotes-tau-seven.vercel.app"})
 public class FlashcardController {
 
     private final FlashcardService flashcardService;

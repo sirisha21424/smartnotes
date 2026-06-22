@@ -1,72 +1,140 @@
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #0f172a;
-  color: white;
-}
-
 .container {
   text-align: center;
-  padding: 20px;
+  padding: 30px;
+  min-height: 100vh;
+  background: #07122b;
+}
+
+.title {
+  font-size: 3rem;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  color: #d1d5db;
+  margin-bottom: 25px;
 }
 
 textarea {
-  width: 80%;
-  height: 120px;
-  margin: 10px;
-  padding: 10px;
-  border-radius: 8px;
+  width: 85%;
+  max-width: 900px;
+  height: 140px;
+  padding: 15px;
+  border-radius: 12px;
   border: none;
+  resize: vertical;
+  font-size: 16px;
+  background: #3f3f46;
+  color: white;
 }
 
 button {
-  padding: 10px 20px;
+  margin-left: 10px;
+  padding: 12px 24px;
   background: #4f46e5;
   border: none;
   color: white;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  opacity: 0.9;
 }
 
 button:disabled {
   background: gray;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
+.loading {
   margin-top: 20px;
+  color: white;
 }
 
-/* Flashcard */
+/* GRID */
+
+.grid {
+  margin-top: 35px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px;
+}
+
+/* FLASHCARD */
+
 .card {
+  height: 300px;
   perspective: 1000px;
   cursor: pointer;
 }
 
+/* INNER FLIP CONTAINER */
+
 .inner {
   position: relative;
-  height: 180px;
-  transition: transform 0.6s;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s;
   transform-style: preserve-3d;
 }
 
-.card.flipped .inner {
+.inner.flipped {
   transform: rotateY(180deg);
 }
 
-.front, .back {
+/* FRONT + BACK */
+
+.front,
+.back {
   position: absolute;
   width: 100%;
   height: 100%;
-  padding: 10px;
+  border-radius: 16px;
+  padding: 25px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
   backface-visibility: hidden;
-  background: #1e293b;
-  border-radius: 10px;
+
+  background: #334155;
+  color: white;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+
+  overflow-y: auto;
+}
+
+.front h3,
+.back h3 {
+  margin-bottom: 15px;
+  font-size: 32px;
+}
+
+.front p,
+.back p {
+  font-size: 18px;
+  line-height: 1.6;
 }
 
 .back {
   transform: rotateY(180deg);
-  background: #334155;
+  background: #1e293b;
+}
+
+small {
+  margin-top: 15px;
+  opacity: 0.7;
+}
+
+/* HOVER EFFECT */
+
+.card:hover {
+  transform: translateY(-5px);
+  transition: 0.3s;
 }

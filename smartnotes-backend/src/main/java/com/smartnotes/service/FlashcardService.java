@@ -17,53 +17,51 @@ import java.util.Map;
 public class FlashcardService {
 
     private final FlashcardRepository flashcardRepository;
+    // 1. Bring back the dependency injection for Gemini
     private final GeminiService geminiService;
 
     public List<FlashcardResponse> generateAndSave(String notes, String subject) {
 
-    System.out.println("🚨 SERVICE WORKING");
+        System.out.println("🚨 SERVICE WORKING - CALLING GEMINI");
 
-    String geminiJson = geminiService.generateFlashcards(notes);
+        // 2. Dynamic live API call replaces our static string block!
+        String geminiJson = geminiService.generateFlashcards(notes);
 
-    ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();
+        List<Map<String, String>> cards;
 
-    List<Map<String, String>> cards;
+        try {
+            cards = mapper.readValue(
+                    geminiJson,
+                    new TypeReference<List<Map<String, String>>>() {}
+            );
+        } catch (Exception e) {
+            System.out.println("Raw AI output was: " + geminiJson);
+            throw new RuntimeException("JSON parsing failed: " + e.getMessage());
+        }
 
-    try {
-        cards = mapper.readValue(
-                geminiJson,
-                new TypeReference<List<Map<String, String>>>() {}
-        );
-    } catch (Exception e) {
-        throw new RuntimeException("JSON parsing failed: " + e.getMessage());
+        List<FlashcardResponse> result = new ArrayList<>();
+
+        for (Map<String, String> card : cards) {
+            Flashcard flashcard = Flashcard.builder()
+                    .subject(subject)
+                    .question(card.get("question"))
+                    .answer(card.get("answer"))
+                    .build();
+
+            Flashcard saved = flashcardRepository.save(flashcard);
+
+            result.add(FlashcardResponse.builder()
+                    .id(saved.getId())
+                    .subject(saved.getSubject())
+                    .question(saved.getQuestion())
+                    .answer(saved.getAnswer())
+                    .build());
+        }
+
+        System.out.println("✅ DONE");
+        return result;
     }
-
-    List<FlashcardResponse> result = new ArrayList<>();
-
-    for (Map<String, String> card : cards) {
-
-        Flashcard flashcard = Flashcard.builder()
-                .subject(subject)
-                .question(card.get("question"))
-                .answer(card.get("answer"))
-                .build();
-
-        Flashcard saved = flashcardRepository.save(flashcard);
-
-        result.add(FlashcardResponse.builder()
-                .id(saved.getId())
-                .subject(saved.getSubject())
-                .question(saved.getQuestion())
-                .answer(saved.getAnswer())
-                .build());
-    }
-
-    System.out.println("✅ DONE");
-
-    return result;
-}
-
-       
 
     public List<Flashcard> getAll() {
         return flashcardRepository.findAll();
